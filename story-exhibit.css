@@ -1,0 +1,31 @@
+/* Scoped to the approved life-stories exhibit. Other page sections are untouched. */
+#stories{padding-top:clamp(64px,9vh,110px)}
+#stories .work-heading{margin-bottom:44px}
+#stories .story-exhibit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px;row-gap:56px}
+#stories .story-card{min-width:0}
+#stories .story-card-main{grid-column:1/-1}
+#stories .story-photo{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;overflow:hidden;background:#171717;text-align:left;color:#fff}
+#stories .story-photo>img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.75,.2,1)}
+#stories .story-card-main .story-photo:after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,rgba(0,0,0,.48),transparent 68%);pointer-events:none}
+#stories .story-lead{position:absolute;top:11%;left:5%;right:5%;z-index:1;pointer-events:none;text-shadow:0 2px 20px #0004}
+#stories .story-lead strong{display:block;font-size:clamp(42px,5.6vw,88px);line-height:1.12;font-weight:500;letter-spacing:-.045em}
+#stories .story-lead>span{display:block;margin-top:24px;font-size:clamp(15px,1.4vw,21px);line-height:1.6}
+#stories .story-caption{display:flex;align-items:baseline;gap:22px;padding-top:18px}
+#stories .story-caption h3{flex-shrink:0;font-size:17px;line-height:1.5;font-weight:400;color:#bbb}
+#stories .story-caption p{font-size:clamp(21px,1.8vw,29px);line-height:1.5;letter-spacing:-.02em}
+#stories .story-contact{display:flex;align-items:center;justify-content:space-between;gap:32px;margin-top:80px;padding:44px 0 80px;border-top:1px solid #ffffff38;scroll-margin-top:85px}
+#stories .story-contact p{font-size:clamp(28px,3.1vw,48px);line-height:1.4;letter-spacing:-.035em}
+#stories .story-contact button{display:inline-flex;align-items:center;gap:30px;flex-shrink:0;padding:10px 0 12px;border-bottom:1px solid #fff;color:#fff;font-size:17px;text-align:left}
+#stories .story-contact button span{font-size:24px;transition:transform .3s}
+#stories .story-contact button:hover span{transform:translate(3px,-3px)}
+.js-motion #stories .story-photo>img{transform:translateY(12px) scale(1.07)}
+.js-motion #stories .story-photo.is-revealed>img{transform:none}
+@media(hover:hover) and (pointer:fine){#stories .story-photo:hover>img,.js-motion #stories .story-photo.is-revealed:hover>img{transform:scale(1.025)}}
+@media(max-width:999px){#stories .story-caption{display:block}#stories .story-caption h3{margin-bottom:8px}#stories .story-contact{align-items:flex-start;flex-direction:column;gap:24px}}
+@media(max-width:699px){#stories{padding-top:56px}#stories .work-heading{margin-bottom:30px}#stories .story-exhibit{grid-template-columns:1fr;row-gap:34px}#stories .story-card-main{grid-column:auto}#stories .story-photo{aspect-ratio:16/10}#stories .story-card-main .story-photo{aspect-ratio:4/3}#stories .story-card-main .story-photo>img{object-position:60% center}#stories .story-lead{top:9%;left:6%;right:6%}#stories .story-lead strong{font-size:clamp(32px,8.4vw,48px);line-height:1.16}#stories .story-lead>span{margin-top:14px;font-size:13px;max-width:18em;line-height:1.7}#stories .story-caption{padding-top:14px}#stories .story-caption h3{font-size:14px;margin-bottom:6px}#stories .story-caption p{font-size:22px;line-height:1.5}#stories .story-contact{margin-top:42px;padding:30px 0 52px}#stories .story-contact p{font-size:30px;max-width:11em}#stories .story-contact button{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.js-motion #stories .story-photo>img,.js-motion #stories .story-photo.is-revealed>img,#stories .story-photo:hover>img{transform:none}}
+
+/* On small screens the lead sits above the photo so no family faces are covered. */
+@media(max-width:699px){#stories .story-card-main .story-photo{display:flex;flex-direction:column-reverse;aspect-ratio:auto;background:transparent}#stories .story-card-main .story-photo:after{display:none}#stories .story-card-main .story-photo>img{height:auto;aspect-ratio:16/9;object-position:center}#stories .story-lead{position:static;width:100%;padding-bottom:22px;text-shadow:none}#stories .story-lead>span{max-width:none;font-size:14px}}
+
+@media(max-width:699px){#stories .story-contact p>span{display:block}}
