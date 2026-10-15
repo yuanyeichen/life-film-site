@@ -158,3 +158,11 @@ dialog{border:0;padding:0;background:var(--paper);color:var(--ink);width:min(640
 .timeline-grid{row-gap:34px}
 .album-colophon{margin-top:24px;padding-top:16px}
 }
+
+/* Feature imagery captions preserve the alternating album layout and scroll masks. */
+.is-features .feature-visual{min-width:0}
+.is-features .timeline-card:nth-child(even) .feature-visual{grid-column:2;grid-row:1}
+.is-features .feature-caption{font-size:12px;line-height:1.8;letter-spacing:.025em;color:#807461;margin:12px 0 0}
+.is-features .timeline-image,.is-features.timeline-motion .timeline-image{filter:saturate(.65) sepia(.05) contrast(.97)}
+.is-features .timeline-card:nth-child(3) .timeline-image{object-position:center}
+@media(max-width:760px){.is-features .feature-caption{font-size:11px;margin-top:10px}.is-features .album-colophon{flex-wrap:wrap;gap:10px}}
