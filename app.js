@@ -1,11 +1,10 @@
 'use strict';
-const {films,features,stories}=window.FILM_CONTENT;
+const {films,stories}=window.FILM_CONTENT;
 const $=selector=>document.querySelector(selector);
 const $$=selector=>[...document.querySelectorAll(selector)];
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const hero=$('.hero');
 const heroVideo=$('#hero-video');
-const brandVideo=$('#brand-video');
 const brand=$('.brand-link');
 const manifesto=$('.hero-manifesto');
 const backgroundVideos=$$('[data-lazy-video]');
@@ -24,18 +23,16 @@ function playBackground(video){
  if(attempt)attempt.then(()=>{
   if(!backgroundAllowed()){video.pause();return;}
   if(video===heroVideo)video.classList.add('is-ready');
-  else if(video!==brandVideo)video.classList.add('is-playing');
+  else video.classList.add('is-playing');
  }).catch(()=>{});
 }
 function updateMedia(){
  const allowed=backgroundAllowed();
- if(allowed&&heroVisible){playBackground(heroVideo);if(!brand.classList.contains('is-small'))playBackground(brandVideo);else brandVideo.pause();}
- else{heroVideo.pause();brandVideo.pause();}
+ if(allowed&&heroVisible)playBackground(heroVideo);
+ else heroVideo.pause();
  backgroundVideos.forEach(video=>{if(allowed&&visibleVideos.has(video))playBackground(video);else video.pause();});
 }
 heroVideo.addEventListener('loadeddata',()=>heroVideo.classList.add('is-ready'));
-brandVideo.addEventListener('loadedmetadata',()=>{if(Number.isFinite(brandVideo.duration))brandVideo.currentTime=heroVideo.currentTime%brandVideo.duration;});
-heroVideo.addEventListener('play',()=>{if(brandVideo.readyState>=1&&Math.abs(brandVideo.currentTime-heroVideo.currentTime)>.2)brandVideo.currentTime=heroVideo.currentTime;});
 motionToggle.addEventListener('click',()=>{
  pausedByUser=!pausedByUser;
  motionToggle.textContent=pausedByUser?'播放 ▶':'暂停 Ⅱ';
@@ -109,46 +106,6 @@ document.addEventListener('keydown',event=>{
  }
 });
 addEventListener('resize',()=>{if(innerWidth>=700&&menuOpen)setMenu(false);});
-
-// Features follow the reference's large image + copy + navigation + thumbnails.
-let featureIndex=0;
-let featureToken=0;
-let featureAnimation;
-const imageStack=$('.feature-image-stack');
-const featureSection=$('#features');
-async function showFeature(index){
- const next=(index+features.length)%features.length;
- if(next===featureIndex)return;
- const previous=featureIndex;
- featureIndex=next;
- const token=++featureToken;
- const feature=features[next];
- const incoming=new Image();incoming.src=feature.image;incoming.alt=`${feature.title}，AI生成场景示意`;incoming.width=1536;incoming.height=1024;
- try{await incoming.decode();}catch{return;}
- if(token!==featureToken)return;
- featureAnimation?.finish();
- const outgoing=imageStack.lastElementChild;
- imageStack.append(incoming);
- const direction=next>previous;
- const start=direction?'inset(0 100% 0 0)':'inset(0 0 0 100%)';
- featureAnimation=incoming.animate([{clipPath:start,transform:'scale(1.04)'},{clipPath:'inset(0)',transform:'scale(1)'}],{duration:reduced.matches?0:600,easing:'cubic-bezier(.2,.8,.2,1)',fill:'both'});
- $('.feature-index').textContent=`0${next+1} / 04`;
- $('#feature-title').textContent=feature.title;
- $('#feature-description').textContent=feature.description;
- $('#feature-note').textContent=feature.note;
- $$('[data-feature]').forEach(button=>{const selected=Number(button.dataset.feature)===next;button.classList.toggle('is-active',selected);button.setAttribute('aria-pressed',String(selected));});
- if(!reduced.matches)$('.feature-copy>div').animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:450,easing:'ease-out'});
- try{await featureAnimation.finished;}catch{}
- outgoing?.remove();
- if(token===featureToken){incoming.style.clipPath='none';featureAnimation.cancel();featureAnimation=null;}
-}
-$('#feature-prev').addEventListener('click',()=>showFeature(featureIndex-1));
-$('#feature-next').addEventListener('click',()=>showFeature(featureIndex+1));
-$$('[data-feature]').forEach(button=>button.addEventListener('click',()=>showFeature(Number(button.dataset.feature))));
-featureSection.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();showFeature(featureIndex+(event.key==='ArrowRight'?1:-1));}});
-let touchStart;
-imageStack.addEventListener('touchstart',event=>{const t=event.changedTouches[0];touchStart={x:t.clientX,y:t.clientY};},{passive:true});
-imageStack.addEventListener('touchend',event=>{if(!touchStart)return;const t=event.changedTouches[0];const dx=t.clientX-touchStart.x;const dy=t.clientY-touchStart.y;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5)showFeature(featureIndex+(dx<0?1:-1));touchStart=null;},{passive:true});
 
 // Real, reversible dialogs for viewing footage, story details and consultation.
 const videoDialog=$('#video-dialog');
