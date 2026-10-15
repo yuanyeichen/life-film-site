@@ -3,6 +3,7 @@ const {films,stories}=window.FILM_CONTENT;
 const $=selector=>document.querySelector(selector);
 const $$=selector=>[...document.querySelectorAll(selector)];
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const phoneLayout=matchMedia('(max-width:699px), (hover:none) and (pointer:coarse) and (max-height:500px) and (max-width:1100px)');
 const hero=$('.hero');
 const heroVideo=$('#hero-video');
 const brand=$('.brand-link');
@@ -68,14 +69,15 @@ function paintScroll(){
  scrollFrame=0;
  paintFeatureMedia();
  paintStatement();
- const vh=innerHeight;
+ const mobile=phoneLayout.matches;
+ // Small viewport units keep this timeline stable as Safari's address bar moves.
+ const vh=mobile?hero.querySelector('.hero-sticky').clientHeight:innerHeight;
  const p=Math.min(1,Math.max(0,scrollY/(vh*.72)));
- const mobile=innerWidth<700;
- const maxWidth=Math.min(820,innerWidth*.44);
- const width=mobile?110:maxWidth+(110-maxWidth)*(1-Math.pow(1-p,2));
+ const maxWidth=mobile?Math.min(420,innerWidth*.72):Math.min(820,innerWidth*.44);
+ const width=maxWidth+(110-maxWidth)*(1-Math.pow(1-p,2));
  const brandWidth=`${width.toFixed(2)}px`;
  if(brand.style.width!==brandWidth)brand.style.width=brandWidth;
- const small=mobile||p>.94||menuOpen;
+ const small=p>.94||menuOpen;
  const wasSmall=brand.classList.contains('is-small');
  brand.classList.toggle('is-small',small);
  if(menuOpen)brand.style.width='110px';
