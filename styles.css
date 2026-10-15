@@ -166,3 +166,22 @@ dialog{border:0;padding:0;background:var(--paper);color:var(--ink);width:min(640
 .is-features .timeline-image,.is-features.timeline-motion .timeline-image{filter:saturate(.65) sepia(.05) contrast(.97)}
 .is-features .timeline-card:nth-child(3) .timeline-image{object-position:center}
 @media(max-width:760px){.is-features .feature-caption{font-size:11px;margin-top:10px}.is-features .album-colophon{flex-wrap:wrap;gap:10px}}
+
+/* Neutral paper palette: keep the existing photographs and all geometry intact. */
+.life-timeline.is-features{background:#fff;color:#17191b}
+.is-features .album-heading-top{color:#737c82;border-color:#e1e5e8}
+.is-features .album-heading-main h2{color:#17191b}
+.is-features .album-heading-main h2>span{color:#65727b}
+.is-features .album-heading-main>p{color:#596168}
+.is-features .timeline-chapter{color:#737d84}
+.is-features .timeline-year{color:#a2acb3}
+.is-features .timeline-year>span{color:#737d84}
+.is-features .timeline-title{color:#17191b}
+.is-features .timeline-description{color:#4e575e}
+.is-features .timeline-tail{color:#737c83;border-color:#e1e5e8}
+.is-features .feature-caption{color:#68747c}
+.is-features .album-colophon{color:#737c83;border-color:#e1e5e8}
+.is-features .timeline-frame{background:#f0f2f3}
+.is-features.timeline-motion .timeline-frame:before{background:#fff}
+.is-features .timeline-frame:after{background:linear-gradient(180deg,transparent 64%,#0005)}
+.life-timeline.is-features .timeline-image{filter:none!important}
