@@ -8,6 +8,7 @@ const heroVideo=$('#hero-video');
 const brand=$('.brand-link');
 const manifesto=$('.hero-manifesto');
 const backgroundVideos=$$('[data-lazy-video]');
+const featureMedia=$$('.latest .film-visual');
 let pausedByUser=false;
 let menuOpen=false;
 let heroVisible=true;
@@ -39,8 +40,25 @@ motionToggle.addEventListener('click',()=>{
  motionToggle.setAttribute('aria-label',pausedByUser?'播放动态影像':'暂停动态影像');
  motionToggle.setAttribute('aria-pressed',String(pausedByUser));updateMedia();
 });
+function paintFeatureMedia(){
+ const vh=innerHeight;
+ featureMedia.forEach(media=>{
+  if(reduced.matches){['reveal','opacity','lift','pan','scale'].forEach(key=>media.style.removeProperty(`--feature-${key}`));return;}
+  const rect=media.parentElement.getBoundingClientRect();
+  const height=media.offsetHeight;
+  const progress=Math.min(1,Math.max(0,(vh*.96-rect.top)/Math.min(vh*.5,height*.85)));
+  const eased=1-Math.pow(1-progress,3);
+  const pan=Math.max(-12,Math.min(12,((rect.top+height/2)/vh-.5)*24));
+  media.style.setProperty('--feature-reveal',eased.toFixed(4));
+  media.style.setProperty('--feature-opacity',(.3+eased*.7).toFixed(4));
+  media.style.setProperty('--feature-lift',`${((1-eased)*22).toFixed(2)}px`);
+  media.style.setProperty('--feature-pan',`${pan.toFixed(2)}px`);
+  media.style.setProperty('--feature-scale',(1.04+(1-eased)*.04).toFixed(4));
+ });
+}
 function paintScroll(){
  scrollFrame=0;
+ paintFeatureMedia();
  const vh=innerHeight;
  const p=Math.min(1,Math.max(0,scrollY/(vh*.72)));
  const mobile=innerWidth<700;
@@ -76,7 +94,7 @@ const revealObserver=new IntersectionObserver(entries=>{
  entries.forEach(entry=>{if(entry.isIntersecting){revealTargets.get(entry.target)?.forEach(el=>el.classList.add('is-revealed'));revealObserver.unobserve(entry.target);}});
 },{threshold:.06,rootMargin:'0px 0px 5% 0px'});
 if(!reduced.matches)document.body.classList.add('js-motion');
-$$('.media-reveal').forEach(el=>{const target=el.parentElement;const list=revealTargets.get(target)||[];list.push(el);revealTargets.set(target,list);revealObserver.observe(target);});
+$$('.media-reveal:not(.latest .media-reveal)').forEach(el=>{const target=el.parentElement;const list=revealTargets.get(target)||[];list.push(el);revealTargets.set(target,list);revealObserver.observe(target);});
 reduced.addEventListener('change',()=>{document.body.classList.toggle('js-motion',!reduced.matches);motionToggle.hidden=reduced.matches;paintScroll();updateMedia();});
 document.addEventListener('visibilitychange',()=>{updateMedia();if(document.hidden)$('#dialog-video').pause();});
 motionToggle.hidden=reduced.matches;
