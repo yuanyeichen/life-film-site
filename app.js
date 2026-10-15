@@ -9,15 +9,18 @@ const brand=$('.brand-link');
 const manifesto=$('.hero-manifesto');
 const backgroundVideos=$$('[data-lazy-video]');
 const featureMedia=$$('.latest .film-visual');
-let pausedByUser=false;
+const statement=$('.documentary-statement');
 let menuOpen=false;
-let heroVisible=true;
+let heroVisible=false;
 let scrollFrame=0;
 const visibleVideos=new Set();
-const motionToggle=$('.motion-toggle');
-function backgroundAllowed(){return !reduced.matches&&!pausedByUser&&!document.hidden&&!menuOpen&&!$('dialog[open]');}
+function backgroundAllowed(){return !reduced.matches&&!document.hidden&&!menuOpen&&!$('dialog[open]');}
 function playBackground(video){
  if(!backgroundAllowed())return;
+ if(video===heroVideo&&!video.getAttribute('src')){
+  const compact=innerWidth<700||navigator.connection?.saveData;
+  video.src=compact?video.dataset.srcMobile:video.dataset.srcDesktop;
+ }
  if(video.dataset.lazyVideo&&!video.getAttribute('src'))video.src=video.dataset.lazyVideo;
  video.muted=true;
  const attempt=video.play();
@@ -34,18 +37,12 @@ function updateMedia(){
  backgroundVideos.forEach(video=>{if(allowed&&visibleVideos.has(video))playBackground(video);else video.pause();});
 }
 heroVideo.addEventListener('loadeddata',()=>heroVideo.classList.add('is-ready'));
-motionToggle.addEventListener('click',()=>{
- pausedByUser=!pausedByUser;
- motionToggle.textContent=pausedByUser?'播放 ▶':'暂停 Ⅱ';
- motionToggle.setAttribute('aria-label',pausedByUser?'播放动态影像':'暂停动态影像');
- motionToggle.setAttribute('aria-pressed',String(pausedByUser));updateMedia();
-});
 function paintFeatureMedia(){
  const vh=innerHeight;
- featureMedia.forEach(media=>{
+ const measurements=featureMedia.map(media=>({media,rect:media.parentElement.getBoundingClientRect(),height:media.offsetHeight}));
+ measurements.forEach(({media,rect,height})=>{
   if(reduced.matches){['reveal','opacity','lift','pan','scale'].forEach(key=>media.style.removeProperty(`--feature-${key}`));return;}
-  const rect=media.parentElement.getBoundingClientRect();
-  const height=media.offsetHeight;
+  if(rect.bottom< -vh*.2||rect.top>vh*1.25)return;
   const progress=Math.min(1,Math.max(0,(vh*.96-rect.top)/Math.min(vh*.5,height*.85)));
   const eased=1-Math.pow(1-progress,3);
   const pan=Math.max(-12,Math.min(12,((rect.top+height/2)/vh-.5)*24));
@@ -56,15 +53,28 @@ function paintFeatureMedia(){
   media.style.setProperty('--feature-scale',(1.04+(1-eased)*.04).toFixed(4));
  });
 }
+function paintStatement(){
+ if(!statement)return;
+ const rect=statement.getBoundingClientRect();
+ const vh=innerHeight;
+ if(!reduced.matches&&(rect.bottom<0||rect.top>vh*1.25))return;
+ const progress=reduced.matches?1:Math.min(1,Math.max(0,(vh*.92-rect.top)/Math.min(vh*.5,rect.height+160)));
+ const eased=1-Math.pow(1-progress,3);
+ statement.style.setProperty('--statement-reveal',eased.toFixed(4));
+ statement.style.setProperty('--statement-opacity',(.18+eased*.82).toFixed(4));
+ statement.style.setProperty('--statement-scale',(.97+eased*.03).toFixed(4));
+}
 function paintScroll(){
  scrollFrame=0;
  paintFeatureMedia();
+ paintStatement();
  const vh=innerHeight;
  const p=Math.min(1,Math.max(0,scrollY/(vh*.72)));
  const mobile=innerWidth<700;
  const maxWidth=Math.min(820,innerWidth*.44);
  const width=mobile?110:maxWidth+(110-maxWidth)*(1-Math.pow(1-p,2));
- brand.style.width=`${width.toFixed(2)}px`;
+ const brandWidth=`${width.toFixed(2)}px`;
+ if(brand.style.width!==brandWidth)brand.style.width=brandWidth;
  const small=mobile||p>.94||menuOpen;
  const wasSmall=brand.classList.contains('is-small');
  brand.classList.toggle('is-small',small);
@@ -83,10 +93,10 @@ addEventListener('resize',scheduleScroll,{passive:true});
 paintScroll();
 const mediaObserver=new IntersectionObserver(entries=>{
  entries.forEach(entry=>{
-  if(entry.target===hero)heroVisible=entry.isIntersecting;
+  if(entry.target===hero)heroVisible=entry.isIntersecting&&entry.intersectionRatio>=.1;
   else{const video=entry.target.querySelector('[data-lazy-video]');if(!video)return;if(entry.isIntersecting)visibleVideos.add(video);else visibleVideos.delete(video);}
  });updateMedia();
-},{threshold:0});
+},{threshold:[0,.1]});
 mediaObserver.observe(hero);
 backgroundVideos.forEach(video=>mediaObserver.observe(video.parentElement));
 const revealTargets=new Map();
@@ -95,9 +105,9 @@ const revealObserver=new IntersectionObserver(entries=>{
 },{threshold:.06,rootMargin:'0px 0px 5% 0px'});
 if(!reduced.matches)document.body.classList.add('js-motion');
 $$('.media-reveal:not(.latest .media-reveal)').forEach(el=>{const target=el.parentElement;const list=revealTargets.get(target)||[];list.push(el);revealTargets.set(target,list);revealObserver.observe(target);});
-reduced.addEventListener('change',()=>{document.body.classList.toggle('js-motion',!reduced.matches);motionToggle.hidden=reduced.matches;paintScroll();updateMedia();});
+reduced.addEventListener('change',()=>{document.body.classList.toggle('js-motion',!reduced.matches);paintScroll();updateMedia();});
 document.addEventListener('visibilitychange',()=>{updateMedia();if(document.hidden)$('#dialog-video').pause();});
-motionToggle.hidden=reduced.matches;
+
 updateMedia();
 
 // Mobile navigation preserves native scrolling and closes before anchor navigation.
@@ -143,7 +153,7 @@ $$('dialog').forEach(dialog=>{
  });
 });
 function openFilm(index){
- const film=index===-1?{title:'树上花开 · 人生影像',video:'assets/hero-documentary-20261015.mp4',poster:'assets/hero-documentary-20261015.jpg'}:films[index];
+ const film=index===-1?{title:'树上花开 · 人生影像',video:heroVideo.getAttribute('src')||heroVideo.dataset.srcDesktop,poster:'assets/hero-web-poster-20261015.jpg'}:films[index];
  if(!film)return;
  $('#video-title').textContent=film.title;
  dialogVideo.poster=film.poster;dialogVideo.src=film.video;

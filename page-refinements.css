@@ -1,0 +1,11 @@
+/* Only the requested feature title, audience title and closing statement. */
+#intro .feature-heading{position:absolute;top:clamp(48px,8vh,88px);left:0;max-width:34%;scroll-margin-top:85px}
+#intro .feature-heading h2{font-family:'Songti SC','STSong','SimSun',serif;font-size:clamp(42px,3.8vw,60px);line-height:1.25;font-weight:600;letter-spacing:-.025em}
+#intro .feature-heading-lead{margin-top:22px;font-size:clamp(21px,1.6vw,26px);line-height:1.6;font-weight:400}
+#intro .feature-heading-note{margin-top:16px;font-size:16px;line-height:1.85;color:#626262}
+#stories .work-heading h2{font-family:'Songti SC','STSong','SimSun',serif;font-size:clamp(32px,3.2vw,50px);font-weight:400;line-height:1.4;letter-spacing:-.025em}
+#stories .story-contact .documentary-statement{font-family:'Songti SC','STSong','SimSun',serif;font-size:clamp(36px,4.2vw,64px);line-height:1.4;letter-spacing:-.025em;max-width:100%}
+#stories .statement-text{display:block;transform-origin:center}
+.js-motion #stories .statement-text{clip-path:inset(calc((1 - var(--statement-reveal,1)) * 45%) calc((1 - var(--statement-reveal,1)) * 50%) calc((1 - var(--statement-reveal,1)) * 45%) calc((1 - var(--statement-reveal,1)) * 50%));opacity:var(--statement-opacity,1);transform:scale(var(--statement-scale,1));will-change:clip-path,opacity,transform}
+@media(max-width:699px){#intro .film-row:first-child{padding-top:36px}#intro .feature-heading{position:static;max-width:100%;margin-bottom:30px}#intro .feature-heading h2{font-size:38px}#intro .feature-heading-lead{font-size:21px;margin-top:14px}#intro .feature-heading-note{font-size:15px;margin-top:12px}#stories .work-heading h2{font-size:30px}#stories .story-contact .documentary-statement{font-size:34px}#stories .statement-text>span{display:block}}
+@media(prefers-reduced-motion:reduce){.js-motion #stories .statement-text{clip-path:none;opacity:1;transform:none}}
