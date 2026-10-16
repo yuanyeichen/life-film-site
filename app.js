@@ -155,7 +155,7 @@ $$('dialog').forEach(dialog=>{
  });
 });
 function openFilm(index){
- const film=index===-1?{title:'树上花开 · 人生影像',video:heroVideo.getAttribute('src')||heroVideo.dataset.srcDesktop,poster:'assets/hero-web-poster-20261015.jpg'}:films[index];
+ const film=index===-1?{title:'树上花开 · 人生影像',video:heroVideo.getAttribute('src')||heroVideo.dataset.srcDesktop,poster:'assets/hero-web-poster-20261015.jpg?v=clean-20261016'}:films[index];
  if(!film)return;
  $('#video-title').textContent=film.title;
  dialogVideo.poster=film.poster;dialogVideo.src=film.video;

@@ -1,10 +1,10 @@
 'use strict';
 window.FILM_CONTENT = {
  films:[
-  {"title":"回望早年","label":"LIFE MEMORY","video":"assets/cover-memory-20261015.mp4","poster":"assets/cover-memory-20261015.jpg"},
-  {"title":"学艺创业","label":"THE FIRST STEP","video":"assets/cover-craft-20261015.mp4","poster":"assets/cover-craft-20261015.jpg"},
-  {"title":"家庭抉择","label":"FAMILY CHOICES","video":"assets/cover-choice-20261015.mp4","poster":"assets/cover-choice-20261015.jpg"},
-  {"title":"重新团聚","label":"COMING HOME","video":"assets/cover-reunion-20261015.mp4","poster":"assets/cover-reunion-20261015.jpg"}
+  {"title":"回望早年","label":"LIFE MEMORY","video":"assets/cover-memory-20261015.mp4?v=clean-20261016","poster":"assets/cover-memory-20261015.jpg?v=clean-20261016"},
+  {"title":"学艺创业","label":"THE FIRST STEP","video":"assets/cover-craft-20261015.mp4?v=clean-20261016","poster":"assets/cover-craft-20261015.jpg?v=clean-20261016"},
+  {"title":"家庭抉择","label":"FAMILY CHOICES","video":"assets/cover-choice-20261015.mp4?v=clean-20261016","poster":"assets/cover-choice-20261015.jpg?v=clean-20261016"},
+  {"title":"重新团聚","label":"COMING HOME","video":"assets/cover-reunion-20261015.mp4?v=clean-20261016","poster":"assets/cover-reunion-20261015.jpg?v=clean-20261016"}
  ],
  features:[
   {title:'一对一深度访谈',image:'assets/feature-interview.jpg',description:'从一次上门访谈开始，听您讲述人生的重要时刻。梳理经历与情感，找到那些值得被家人记住的故事。',note:'上门一对一访谈 · 人生故事梳理'},
