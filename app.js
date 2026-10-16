@@ -5,6 +5,7 @@ const $$=selector=>[...document.querySelectorAll(selector)];
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const phoneLayout=matchMedia('(max-width:699px), (hover:none) and (pointer:coarse) and (max-height:500px) and (max-width:1100px)');
 const hero=$('.hero');
+const heroViewport=hero.querySelector('.hero-sticky');
 const heroVideo=$('#hero-video');
 const brand=$('.brand-link');
 const manifesto=$('.hero-manifesto');
@@ -26,18 +27,20 @@ const visibleVideos=new Set();
 function backgroundAllowed(){return !reduced.matches&&!document.hidden&&!menuOpen&&!$('dialog[open]');}
 function playBackground(video){
  if(!backgroundAllowed())return;
+ video.defaultMuted=true;
+ video.muted=true;
+ video.playsInline=true;
  if(video===heroVideo&&!video.getAttribute('src')){
   const compact=innerWidth<700||navigator.connection?.saveData;
   video.src=compact?video.dataset.srcMobile:video.dataset.srcDesktop;
  }
  if(video.dataset.lazyVideo&&!video.getAttribute('src'))video.src=video.dataset.lazyVideo;
- video.muted=true;
  const attempt=video.play();
  if(attempt)attempt.then(()=>{
   if(!backgroundAllowed()){video.pause();return;}
   if(video===heroVideo)video.classList.add('is-ready');
   else video.classList.add('is-playing');
- }).catch(()=>{});
+ }).catch(()=>{if(video===heroVideo)video.classList.remove('is-ready');});
 }
 function updateMedia(){
  const allowed=backgroundAllowed();
@@ -45,7 +48,16 @@ function updateMedia(){
  else heroVideo.pause();
  backgroundVideos.forEach(video=>{if(allowed&&visibleVideos.has(video))playBackground(video);else video.pause();});
 }
-heroVideo.addEventListener('loadeddata',()=>heroVideo.classList.add('is-ready'));
+heroVideo.addEventListener('playing',()=>heroVideo.classList.add('is-ready'));
+heroVideo.addEventListener('error',()=>heroVideo.classList.remove('is-ready'));
+function resumeVisibleMedia(){
+ if(!backgroundAllowed())return;
+ const rect=heroViewport.getBoundingClientRect();
+ if(rect.bottom>0&&rect.top<innerHeight&&heroVideo.paused)playBackground(heroVideo);
+}
+// Retry in a real interaction handler when a mobile browser blocks autoplay.
+['pointerdown','touchend','keydown'].forEach(type=>document.addEventListener(type,resumeVisibleMedia,{passive:true}));
+addEventListener('pageshow',resumeVisibleMedia);
 function paintFeatureMedia(){
  const vh=innerHeight;
  const measurements=featureMedia.map(media=>({media,rect:media.parentElement.getBoundingClientRect(),height:media.offsetHeight}));
@@ -99,9 +111,10 @@ function paintScroll(){
  hero.style.setProperty('--hero-scale',reduced.matches?'1':(1+heroP*.17).toFixed(4));
  hero.style.setProperty('--hero-shade',(.18+heroP*.4).toFixed(4));
  const reveal=Math.min(1,Math.max(0,(heroP-.48)/.35));
- const manifestoReveal=(mobile&&innerWidth<700&&innerHeight>=innerWidth) ? .55+reveal*.45 : reveal;
+ const portraitPhone=mobile&&innerWidth<700&&innerHeight>=innerWidth;
+ const manifestoReveal=portraitPhone?Math.min(1,Math.max(0,heroP/.65)):reveal;
  manifesto.style.opacity=reduced.matches?'1':manifestoReveal.toFixed(3);
- manifesto.style.transform=reduced.matches?'none':`translate3d(0,${((1-manifestoReveal)*35).toFixed(2)}px,0)`;
+ manifesto.style.transform=reduced.matches?'none':`translate3d(0,${((1-manifestoReveal)*(portraitPhone?60:35)).toFixed(2)}px,0)`;
  if(wasSmall!==small)updateMedia();
 }
 function scheduleScroll(){if(!scrollFrame)scrollFrame=requestAnimationFrame(paintScroll);}
@@ -110,11 +123,11 @@ addEventListener('resize',scheduleScroll,{passive:true});
 paintScroll();
 const mediaObserver=new IntersectionObserver(entries=>{
  entries.forEach(entry=>{
-  if(entry.target===hero)heroVisible=entry.isIntersecting&&entry.intersectionRatio>=.1;
+  if(entry.target===heroViewport)heroVisible=entry.isIntersecting;
   else{const video=entry.target.querySelector('[data-lazy-video]');if(!video)return;if(entry.isIntersecting)visibleVideos.add(video);else visibleVideos.delete(video);}
  });updateMedia();
 },{threshold:[0,.1]});
-mediaObserver.observe(hero);
+mediaObserver.observe(heroViewport);
 backgroundVideos.forEach(video=>mediaObserver.observe(video.parentElement));
 const revealTargets=new Map();
 const revealObserver=new IntersectionObserver(entries=>{
