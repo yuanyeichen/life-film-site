@@ -6,6 +6,13 @@
 #stories .work-heading h2{font-family:'Songti SC','STSong','SimSun',serif;font-size:clamp(32px,3.2vw,50px);font-weight:400;line-height:1.4;letter-spacing:-.025em}
 #stories .story-contact .documentary-statement{font-family:'Songti SC','STSong','SimSun',serif;font-size:clamp(36px,4.2vw,64px);line-height:1.4;letter-spacing:-.025em;max-width:100%}
 #stories .statement-text{display:block;transform-origin:center}
-.js-motion #stories .statement-text{clip-path:inset(calc((1 - var(--statement-reveal,1)) * 45%) calc((1 - var(--statement-reveal,1)) * 50%) calc((1 - var(--statement-reveal,1)) * 45%) calc((1 - var(--statement-reveal,1)) * 50%));opacity:var(--statement-opacity,1);transform:scale(var(--statement-scale,1));will-change:clip-path,opacity,transform}
+#stories .statement-text{white-space:nowrap}
+#stories .statement-text>.statement-char{display:inline-block}
+.js-motion #stories .statement-char{transform:translate3d(var(--letter-shift,0em),0,0);opacity:var(--letter-opacity,1);will-change:transform,opacity}
 @media(max-width:699px){#intro .film-row:first-child{padding-top:36px}#intro .feature-heading{position:static;max-width:100%;margin-bottom:30px}#intro .feature-heading h2{font-size:38px}#intro .feature-heading-lead{font-size:21px;margin-top:14px}#intro .feature-heading-note{font-size:15px;margin-top:12px}#stories .work-heading h2{font-size:30px}#stories .story-contact .documentary-statement{font-size:34px}#stories .statement-text>span{display:block}}
 @media(prefers-reduced-motion:reduce){.js-motion #stories .statement-text{clip-path:none;opacity:1;transform:none}}
+
+/* Only the requested closing message: centered, with more breathing room. */
+#stories .story-contact.is-centered{justify-content:center;align-items:center;text-align:center;gap:0;min-height:360px;padding:110px 0}
+#stories .story-contact.is-centered .documentary-statement{width:100%;max-width:100%;text-align:center}
+@media(max-width:699px){#stories .story-contact.is-centered{min-height:280px;padding:90px 0}}

@@ -1,0 +1,63 @@
+/* Five narrow package cards share one row; touch screens scroll the same row. */
+#pricing-dialog{width:min(1680px,calc(100% - 40px))}
+#pricing-dialog .pricing{padding-left:28px;padding-right:28px}
+#pricing-dialog .pricing-heading,#pricing-dialog .pricing-grid--packages,#pricing-dialog .pricing-footnote{max-width:none}
+#pricing-dialog .pricing-grid--packages{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:stretch}
+#pricing-dialog .pricing-grid--packages>.price-card{grid-column:auto;min-height:550px;padding:24px 20px;min-width:0}
+#pricing-dialog .pricing-grid--packages h3{font-size:22px;line-height:1.35}
+#pricing-dialog .package-price{display:flex;align-items:baseline;gap:3px;font-size:clamp(29px,2.5vw,36px);line-height:1.15;font-weight:600;white-space:nowrap;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+#pricing-dialog .package-price .currency{font-size:18px;letter-spacing:0}
+#pricing-dialog .package-price small{font-size:14px;font-weight:400;letter-spacing:0;margin-left:2px}
+#pricing-dialog .package-duration{font-size:13px;line-height:1.7;margin-top:12px}
+#pricing-dialog .pricing-grid--packages .package-summary{font-size:13px;line-height:1.85;margin-top:22px}
+#pricing-dialog .pricing-grid--packages .price-features{font-size:13px;line-height:1.8;gap:10px;margin:24px 0 28px}
+#pricing-dialog .pricing-grid--packages .price-features li{padding-left:19px}
+#pricing-dialog .pricing-grid--packages .pill-button{font-size:13px;min-height:49px;padding:12px 10px;gap:10px}
+#pricing-dialog .duration-prices{width:100%;border-collapse:collapse;margin-top:22px;font-size:13px;line-height:1.6}
+#pricing-dialog .duration-prices th{font-weight:400;text-align:left}
+#pricing-dialog .duration-prices td,#pricing-dialog .duration-prices thead th:last-child{text-align:right}
+#pricing-dialog .duration-prices th,#pricing-dialog .duration-prices td{padding:9px 0;border-bottom:1px solid #dedbd4}
+#pricing-dialog .duration-prices thead th{font-size:12px;color:#8a857b;padding-top:0}
+#pricing-dialog .duration-prices td{font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
+#pricing-dialog .duration-prices+.price-features{margin-top:18px}
+#pricing-dialog .pricing-footnote{align-items:flex-end}
+#pricing-dialog .pricing-wechat{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0;font-size:14px;line-height:1.5;flex-shrink:0}
+#pricing-dialog .pricing-wechat img{width:112px;height:112px;object-fit:contain}
+.consult-dialog--wechat{width:min(440px,calc(100% - 36px));text-align:center}
+.wechat-contact{padding:46px 28px 32px}
+.wechat-contact h2{font-size:27px;font-weight:500;line-height:1.4;margin:0 0 10px}
+.wechat-package{font-size:15px;color:#777;margin:0 0 12px}
+.wechat-qr{width:min(256px,100%);height:auto;object-fit:contain;margin:12px auto}
+.wechat-scan-tip{font-size:14px;color:#555;line-height:1.8;margin-top:16px}
+.wechat-save{display:inline-flex;gap:16px;align-items:center;justify-content:center;padding:12px 24px;margin-top:18px;border:1px solid #ddd;border-radius:99px;font-size:14px}
+.wechat-save:hover{border-color:#000}
+.wechat-mobile-tip{display:none;font-size:12px;line-height:1.7;color:#777;margin-top:14px}
+.footer-form .footer-contact-label{font-size:12px;font-weight:500}
+@media(min-width:1100px) and (max-width:1250px){#pricing-dialog .pricing-grid--packages>.price-card{padding:22px 16px}#pricing-dialog .pricing{padding-left:22px;padding-right:22px}}
+@media(max-width:1099px){
+ #pricing-dialog .pricing-grid--packages{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:260px;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-x:contain;scrollbar-width:thin;padding-bottom:12px}
+ #pricing-dialog .pricing-grid--packages>.price-card{scroll-snap-align:start}
+}
+@media(max-width:699px){
+ #pricing-dialog{width:calc(100% - 24px)}
+ #pricing-dialog .pricing{padding-left:18px;padding-right:18px}
+ #pricing-dialog .pricing-grid--packages{grid-auto-columns:92%;gap:14px}
+ #pricing-dialog .pricing-grid--packages>.price-card{padding:26px 22px;min-height:550px}
+ #pricing-dialog .pricing-grid--packages h3{font-size:23px}
+ #pricing-dialog .package-price{font-size:34px}
+ #pricing-dialog .pricing-grid--packages .package-summary,#pricing-dialog .pricing-grid--packages .price-features{font-size:14px}
+ #pricing-dialog .pricing-footnote{display:flex;gap:16px}
+ #pricing-dialog .pricing-footnote>span{max-width:50%;line-height:1.8}
+ #pricing-dialog .pricing-wechat img{width:100px;height:100px}
+ .wechat-contact{padding:44px 24px 28px}
+ .wechat-mobile-tip{display:block}
+}
+
+/* Keep the experience card unchanged; match the other four to the existing dark card. */
+#pricing-dialog .pricing-grid--packages>.price-card:not(:first-child){background:#1c1b18;color:#faf9f6;border-color:#1c1b18}
+#pricing-dialog .price-card:not(:first-child) .price-subtitle{color:#a8a399}
+#pricing-dialog .price-card:not(:first-child) .package-summary{color:#d0cbc3}
+#pricing-dialog .price-card:not(:first-child) .price-features{color:#c5c0b7}
+#pricing-dialog .price-card:not(:first-child) .price-features li:before{color:#999388}
+#pricing-dialog .price-card:not(:first-child) .pill-button{background:#faf9f6;color:#1c1b18;border-color:#faf9f6}
+#pricing-dialog .price-card:not(:first-child) .pill-button:hover{background:#e2ddd3}

@@ -11,6 +11,14 @@ const manifesto=$('.hero-manifesto');
 const backgroundVideos=$$('[data-lazy-video]');
 const featureMedia=$$('.latest .film-visual');
 const statement=$('.documentary-statement');
+const statementText=statement?.querySelector('.statement-text');
+const statementCharacters=statementText?Array.from(statementText.textContent,character=>{
+ const span=document.createElement('span');
+ span.className='statement-char';
+ span.textContent=character;
+ return span;
+}):[];
+if(statementText)statementText.replaceChildren(...statementCharacters);
 let menuOpen=false;
 let heroVisible=false;
 let scrollFrame=0;
@@ -60,10 +68,16 @@ function paintStatement(){
  const vh=innerHeight;
  if(!reduced.matches&&(rect.bottom<0||rect.top>vh*1.25))return;
  const progress=reduced.matches?1:Math.min(1,Math.max(0,(vh*.92-rect.top)/Math.min(vh*.5,rect.height+160)));
- const eased=1-Math.pow(1-progress,3);
- statement.style.setProperty('--statement-reveal',eased.toFixed(4));
- statement.style.setProperty('--statement-opacity',(.18+eased*.82).toFixed(4));
- statement.style.setProperty('--statement-scale',(.97+eased*.03).toFixed(4));
+ statement.style.setProperty('--statement-reveal',progress.toFixed(4));
+ const middle=(statementCharacters.length-1)/2;
+ const expansion=progress*progress*(3-2*progress);
+ statementCharacters.forEach((character,index)=>{
+  const distance=Math.abs(index-middle)/Math.max(1,middle);
+  const delay=distance*.44;
+  const local=reduced.matches?1:Math.min(1,Math.max(0,(progress-delay)/(1-delay)));
+  character.style.setProperty('--letter-shift',`${((middle-index)*.95*(1-expansion)).toFixed(4)}em`);
+  character.style.setProperty('--letter-opacity',Math.min(1,local*3).toFixed(4));
+ });
 }
 function paintScroll(){
  scrollFrame=0;
@@ -173,21 +187,15 @@ $$('[data-story]').forEach(button=>button.addEventListener('click',()=>{
  $('#dialog-story-description').textContent=story.description;
  openDialog(storyDialog);
 }));
-function openConsult(packageName='聊聊我的故事',category='自己'){
- $('#consult-package').value=packageName;$('#consult-category').value=category;$('#copy-status').textContent='';openDialog(consultDialog);
+function openConsult(packageName='聊聊我的故事'){
+ const selected=packageName!=='聊聊我的故事';
+ $('#wechat-package').textContent=selected?`${packageName}咨询`:'';
+ $('#wechat-package').hidden=!selected;
+ openDialog(consultDialog);
 }
 $$('[data-consult]').forEach(button=>button.addEventListener('click',()=>{if(pricingDialog.open)pricingDialog.close();openConsult(button.dataset.consult);}));
-$('#story-consult').addEventListener('click',()=>{storyDialog.close();openConsult('聊聊我的故事',stories[selectedStory].category);});
+$('#story-consult').addEventListener('click',()=>{storyDialog.close();openConsult();});
 $$('[data-open-pricing]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();openDialog(pricingDialog);}));
-pricingDialog.querySelector('a[href="#contact"]').addEventListener('click',event=>{event.preventDefault();pricingDialog.close();requestAnimationFrame(()=>$('#contact').scrollIntoView({behavior:reduced.matches?'instant':'smooth'}));});
-$('#quick-consult').addEventListener('submit',event=>{event.preventDefault();$('#consult-story').value=$('#quick-story').value.trim();openConsult();});
-$('#consult-form').addEventListener('submit',async event=>{
- event.preventDefault();
- const story=$('#consult-story').value.trim();if(!story)return;
- const brief=`我的纪录片需求\n方案：${$('#consult-package').value}\n记录对象：${$('#consult-category').value}\n想留下的故事：${story}`;
- try{await navigator.clipboard.writeText(brief);$('#copy-status').textContent='已复制。可以粘贴给制作方；此处没有发送或提交内容。';}
- catch{$('#consult-story').value=brief;$('#consult-story').focus();$('#consult-story').select();$('#copy-status').textContent='请复制已选中的咨询内容，保存后用于沟通。';}
-});
 if(location.hash==='#pricing')openDialog(pricingDialog);
 
 // Desktop pointer label accompanies imagery without replacing focus or touch controls.

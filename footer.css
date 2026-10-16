@@ -1,0 +1,20 @@
+/* Footer only: introduction and the existing package entry. */
+.site-footer.site-footer--info{grid-template-columns:repeat(2,minmax(0,1fr));gap:52px clamp(32px,7vw,112px);padding:64px clamp(24px,5vw,80px) 24px}
+.site-footer--info .footer-brand{min-width:0}
+.site-footer--info .footer-brand-link{display:inline-block}
+.site-footer--info .footer-wordmark{width:clamp(140px,12vw,190px);height:auto;filter:invert(1)}
+.site-footer--info .footer-brand-name{font-size:18px;font-weight:500;line-height:1.6;margin-top:16px}
+.site-footer--info .footer-about{font-size:15px;line-height:1.95;color:#555;margin-top:18px}
+.site-footer--info .footer-consult-link{display:inline-block;font-size:16px;line-height:1.5;padding:0;margin:0;border:0;text-decoration:none;color:#806a47}
+.site-footer--info .footer-bottom{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:22px;border-top:1px solid #dedede}
+.site-footer--info .footer-copyright{font-size:12px;line-height:1.7;color:#666}
+@media(max-width:699px){
+ .site-footer.site-footer--info{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:34px 20px;padding:40px var(--gutter) 24px}
+ .site-footer--info .footer-brand{grid-column:1/-1}
+ .site-footer--info .footer-wordmark{width:140px}
+ .site-footer--info .footer-brand-name{font-size:17px;margin-top:12px}
+ .site-footer--info .footer-about{font-size:14px;line-height:1.9;margin-top:14px}
+ .site-footer--info .footer-bottom{flex-wrap:wrap}
+ .site-footer--info .footer-consult-link{font-size:clamp(14px,3.8vw,16px);margin-left:auto}
+ .site-footer--info .footer-copyright{font-size:11px}
+}

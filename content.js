@@ -10,7 +10,7 @@ window.FILM_CONTENT = {
   {title:'一对一深度访谈',image:'assets/feature-interview.jpg',description:'从一次上门访谈开始，听您讲述人生的重要时刻。梳理经历与情感，找到那些值得被家人记住的故事。',note:'上门一对一访谈 · 人生故事梳理'},
   {title:'老照片与旧影像修复',image:'assets/feature-restoration.jpg',description:'整理珍藏的老照片与旧影像，修复岁月留下的模糊与损伤，让熟悉的面容和往事重新清晰起来。',note:'老照片修复 · 旧影像整理'},
   {title:'电影化叙事与制作',image:'assets/feature-cinema.jpg',description:'以人生故事剪辑与专属剧本组织叙事，结合电影调色、配乐与精细包装，把散落的记忆制作成一部专属人生电影。',note:'人生故事剪辑 · 电影调色与配乐'},
-  {title:'AI数字人与长久珍藏',image:'assets/feature-legacy.jpg',description:'以超写实数字人留存声音与面容，结合终身素材存档，让人生影像成为家人可以反复观看、长久珍藏的记忆。',note:'AI数字人留存声音与面容 · 终身素材存档'}
+  {title:'AI数字人与永久珍藏',image:'assets/feature-legacy.jpg',description:'以超写实数字人留存声音与面容，结合终身素材存档，让人生影像成为家人可以反复观看、长久珍藏的记忆。',note:'AI数字人留存声音与面容 · 终身素材存档'}
  ],
  stories:[
   {label:'家庭 / FAMILY',category:'家庭',image:'assets/story-family.jpg',title:'一个家的来路',description:'他们是父母，也曾是少年。把年轻时的选择、共同生活的片段和一家人的记忆串联起来，让家里的故事有人讲，也有人记得。'},
