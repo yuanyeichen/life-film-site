@@ -4,6 +4,7 @@ const $=selector=>document.querySelector(selector);
 const $$=selector=>[...document.querySelectorAll(selector)];
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const phoneLayout=matchMedia('(max-width:699px), (hover:none) and (pointer:coarse) and (max-height:500px) and (max-width:1100px)');
+const portraitPhoneLayout=matchMedia('(max-width:699px) and (orientation:portrait)');
 const hero=$('.hero');
 const heroViewport=hero.querySelector('.hero-sticky');
 const heroVideo=$('#hero-video');
@@ -23,7 +24,28 @@ if(statementText)statementText.replaceChildren(...statementCharacters);
 let menuOpen=false;
 let heroVisible=false;
 let scrollFrame=0;
+let mobileMotionHeight=0;
 const visibleVideos=new Set();
+function syncHeroCopyHeight(){
+ if(!portraitPhoneLayout.matches){hero.style.removeProperty('--mobile-copy-content-height');return;}
+ const height=`${manifesto.offsetHeight}px`;
+ if(hero.style.getPropertyValue('--mobile-copy-content-height')!==height){
+  hero.style.setProperty('--mobile-copy-content-height',height);
+  scheduleScroll();
+ }
+}
+function syncResponsiveMetrics(){
+ if(phoneLayout.matches){
+  // Measure the same stable viewport used by CSS instead of the moving toolbar.
+  const probe=document.createElement('div');
+  probe.style.cssText='position:fixed;left:0;top:0;visibility:hidden;pointer-events:none;width:0;height:100vh;height:100svh';
+  document.body.append(probe);
+  mobileMotionHeight=probe.getBoundingClientRect().height||innerHeight;
+  probe.remove();
+ }else mobileMotionHeight=0;
+ syncHeroCopyHeight();
+}
+function motionViewportHeight(){return phoneLayout.matches?(mobileMotionHeight||innerHeight):innerHeight;}
 function backgroundAllowed(){return !reduced.matches&&!document.hidden&&!menuOpen&&!$('dialog[open]');}
 function playBackground(video){
  if(!backgroundAllowed())return;
@@ -59,7 +81,7 @@ function resumeVisibleMedia(){
 ['pointerdown','touchend','keydown'].forEach(type=>document.addEventListener(type,resumeVisibleMedia,{passive:true}));
 addEventListener('pageshow',resumeVisibleMedia);
 function paintFeatureMedia(){
- const vh=innerHeight;
+ const vh=motionViewportHeight();
  const measurements=featureMedia.map(media=>({media,rect:media.parentElement.getBoundingClientRect(),height:media.offsetHeight}));
  measurements.forEach(({media,rect,height})=>{
   if(reduced.matches){['reveal','opacity','lift','pan','scale'].forEach(key=>media.style.removeProperty(`--feature-${key}`));return;}
@@ -77,7 +99,7 @@ function paintFeatureMedia(){
 function paintStatement(){
  if(!statement)return;
  const rect=statement.getBoundingClientRect();
- const vh=innerHeight;
+ const vh=motionViewportHeight();
  if(!reduced.matches&&(rect.bottom<0||rect.top>vh*1.25))return;
  const progress=reduced.matches?1:Math.min(1,Math.max(0,(vh*.92-rect.top)/Math.min(vh*.5,rect.height+160)));
  statement.style.setProperty('--statement-reveal',progress.toFixed(4));
@@ -111,7 +133,7 @@ function paintScroll(){
  hero.style.setProperty('--hero-scale',reduced.matches?'1':(1+heroP*.17).toFixed(4));
  hero.style.setProperty('--hero-shade',(.18+heroP*.4).toFixed(4));
  const reveal=Math.min(1,Math.max(0,(heroP-.48)/.35));
- const portraitPhone=mobile&&innerWidth<700&&innerHeight>=innerWidth;
+ const portraitPhone=portraitPhoneLayout.matches;
  const manifestoReveal=portraitPhone?Math.min(1,Math.max(0,heroP/.65)):reveal;
  manifesto.style.opacity=reduced.matches?'1':manifestoReveal.toFixed(3);
  manifesto.style.transform=reduced.matches?'none':`translate3d(0,${((1-manifestoReveal)*(portraitPhone?60:35)).toFixed(2)}px,0)`;
@@ -119,7 +141,10 @@ function paintScroll(){
 }
 function scheduleScroll(){if(!scrollFrame)scrollFrame=requestAnimationFrame(paintScroll);}
 addEventListener('scroll',scheduleScroll,{passive:true});
-addEventListener('resize',scheduleScroll,{passive:true});
+addEventListener('resize',()=>{syncResponsiveMetrics();scheduleScroll();},{passive:true});
+phoneLayout.addEventListener('change',()=>{syncResponsiveMetrics();scheduleScroll();});
+if('ResizeObserver' in window)new ResizeObserver(syncHeroCopyHeight).observe(manifesto);
+syncResponsiveMetrics();
 paintScroll();
 const mediaObserver=new IntersectionObserver(entries=>{
  entries.forEach(entry=>{

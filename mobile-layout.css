@@ -1,5 +1,6 @@
 /* Touch adaptation only: preserve the approved desktop composition. */
 @media (max-width:699px), (hover:none) and (pointer:coarse) and (max-height:500px) and (max-width:1100px){
+ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  :root{--gutter:max(18px,env(safe-area-inset-left),env(safe-area-inset-right))}
  .brand-link{top:max(17px,calc(env(safe-area-inset-top) + 13px));width:min(48vw,260px)}
  .desktop-nav{display:none}
@@ -17,7 +18,7 @@
 }
 /* A shorter portrait cover shows more of the original widescreen footage. */
 @media(max-width:699px) and (orientation:portrait){
- .hero{--mobile-copy-height:clamp(160px,24svh,200px);height:calc(60svh + var(--mobile-copy-height))}
+ .hero{--mobile-copy-height:clamp(160px,24svh,200px);height:calc(60svh + max(var(--mobile-copy-height),var(--mobile-copy-content-height,0px)))}
  .hero-sticky{height:60svh}
  .hero-poster,.hero-sticky>video{object-position:50% center}
  .hero-manifesto{top:60svh;min-height:var(--mobile-copy-height);padding:24px 0}
