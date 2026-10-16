@@ -87,7 +87,7 @@ function paintScroll(){
  // Small viewport units keep this timeline stable as Safari's address bar moves.
  const vh=mobile?hero.querySelector('.hero-sticky').clientHeight:innerHeight;
  const p=Math.min(1,Math.max(0,scrollY/(vh*.72)));
- const maxWidth=mobile?Math.min(420,innerWidth*.72):Math.min(820,innerWidth*.44);
+ const maxWidth=mobile?Math.min(260,innerWidth*.48):Math.min(820,innerWidth*.44);
  const width=maxWidth+(110-maxWidth)*(1-Math.pow(1-p,2));
  const brandWidth=`${width.toFixed(2)}px`;
  if(brand.style.width!==brandWidth)brand.style.width=brandWidth;
@@ -99,8 +99,9 @@ function paintScroll(){
  hero.style.setProperty('--hero-scale',reduced.matches?'1':(1+heroP*.17).toFixed(4));
  hero.style.setProperty('--hero-shade',(.18+heroP*.4).toFixed(4));
  const reveal=Math.min(1,Math.max(0,(heroP-.48)/.35));
- manifesto.style.opacity=reduced.matches?'1':reveal.toFixed(3);
- manifesto.style.transform=reduced.matches?'none':`translate3d(0,${((1-reveal)*35).toFixed(2)}px,0)`;
+ const manifestoReveal=(mobile&&innerWidth<700&&innerHeight>=innerWidth) ? .55+reveal*.45 : reveal;
+ manifesto.style.opacity=reduced.matches?'1':manifestoReveal.toFixed(3);
+ manifesto.style.transform=reduced.matches?'none':`translate3d(0,${((1-manifestoReveal)*35).toFixed(2)}px,0)`;
  if(wasSmall!==small)updateMedia();
 }
 function scheduleScroll(){if(!scrollFrame)scrollFrame=requestAnimationFrame(paintScroll);}

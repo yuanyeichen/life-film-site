@@ -1,7 +1,7 @@
 /* Touch adaptation only: preserve the approved desktop composition. */
 @media (max-width:699px), (hover:none) and (pointer:coarse) and (max-height:500px) and (max-width:1100px){
  :root{--gutter:max(18px,env(safe-area-inset-left),env(safe-area-inset-right))}
- .brand-link{top:max(17px,calc(env(safe-area-inset-top) + 13px));width:min(72vw,420px)}
+ .brand-link{top:max(17px,calc(env(safe-area-inset-top) + 13px));width:min(48vw,260px)}
  .desktop-nav{display:none}
  .menu-toggle{display:block;top:max(10px,calc(env(safe-area-inset-top) + 6px));height:44px;line-height:44px;min-width:44px}
  .mobile-menu{padding-top:max(80px,calc(env(safe-area-inset-top) + 70px));padding-left:var(--gutter);padding-right:var(--gutter)}
@@ -14,6 +14,13 @@
  .hero-manifesto{padding-top:7svh;padding-bottom:7svh}
  .hero-manifesto>p{font-size:14px;line-height:1.8}
  #stories .story-contact{padding-bottom:max(52px,calc(env(safe-area-inset-bottom) + 32px))}
+}
+/* A shorter portrait cover shows more of the original widescreen footage. */
+@media(max-width:699px) and (orientation:portrait){
+ .hero{height:100svh}
+ .hero-sticky{height:60svh}
+ .hero-poster,.hero-sticky>video{object-position:50% center}
+ .hero-manifesto{top:60svh;min-height:40svh;padding:24px 0}
 }
 @media(max-width:699px){
  .hero-manifesto h1{font-size:clamp(34px,10.5vw,52px);line-height:1.2}
